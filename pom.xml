@@ -5,7 +5,7 @@
   <groupId>com.game</groupId>
   <artifactId>spacegate</artifactId>
   <version>1.0.0.0</version>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
 
   <name>spacegate</name>
   <url>http://maven.apache.org</url>
@@ -13,6 +13,14 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
+	<repositories>
+		<repository>
+			<id>maven2.webmedia.ee</id>
+			<url>http://maven2.webmedia.ee</url>
+		</repository>
+	</repositories>
+
 
   <dependencies>
     <dependency>
@@ -22,4 +30,8 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <modules>
+  	<module>server</module>
+  	<module>client</module>
+  </modules>
 </project>
