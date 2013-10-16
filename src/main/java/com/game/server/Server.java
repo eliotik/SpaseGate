@@ -30,6 +30,7 @@ public class Server extends Thread {
 
 
     public void run() {
+        System.out.println("Welcome to Server side");
         while (isRunning) {
             try {
                 servers = new ServerSocket(port);
@@ -68,18 +69,10 @@ public class Server extends Thread {
 
 
 
-    public static void main(String[] args) throws IOException {
-        System.out.println("Welcome to Server side");
-
+    public static void main(String[] args) {
 
         Server server = new Server(4444);
         server.start();
-
-
-
-        // create server socket
-
-
 
 
 
