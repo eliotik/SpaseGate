@@ -5,7 +5,7 @@ import com.game.server.MultiServer;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.Scanner;
+
 
 public class Client extends Thread {
     private Socket socket;
@@ -13,15 +13,10 @@ public class Client extends Thread {
     private PrintWriter out;
     private static int counter = 0;
     private int id = counter++;
-    private static int threadcount = 0;
 
-    public static int threadCount() {
-        return threadcount;
-    }
 
     public Client(InetAddress addr) {
         System.out.println("Making client " + id);
-        threadcount++;
         try {
             socket = new Socket(addr, MultiServer.PORT);
         }
@@ -66,7 +61,6 @@ public class Client extends Thread {
             catch (IOException e) {
                 System.err.println("Socket not closed");
             }
-            threadcount--;
         }
     }
 

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 
 public class MultiClient {
-    static final int MAX_THREADS = 40;
     public static boolean isRunning = false;
 
     public static void main(String[] args) throws IOException, InterruptedException {
