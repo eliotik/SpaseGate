@@ -1,70 +1,75 @@
 package com.game.client;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import com.game.server.MultiServer;
+
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class Client extends Thread {
+    private Socket socket;
+    private BufferedReader in;
+    private PrintWriter out;
+    private static int counter = 0;
+    private int id = counter++;
+    private static int threadcount = 0;
 
-    private Socket fromServer;
-    private int port;
-    private String address;
-//    private InetAddress address;
-    public static boolean isRunning = false;
-
-    public Client(String address, int port) {
-        this.address = address;
-        this.port = port;
+    public static int threadCount() {
+        return threadcount;
     }
 
-    public synchronized void start() {
-        if (isRunning) return;
-        isRunning = true;
-        new Thread(this).start();
+    public Client(InetAddress addr) {
+        System.out.println("Making client " + id);
+        threadcount++;
+        try {
+            socket = new Socket(addr, MultiServer.PORT);
+        }
+        catch (IOException e) {
+            System.err.println("Socket failed");
+        }
+        try {
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+
+            start();
+        }
+        catch (IOException e) {
+            try {
+                socket.close();
+            }
+            catch (IOException e2) {
+                System.err.println("Socket not closed");
+            }
+        }
     }
 
     public void run() {
-        while (isRunning) {
-            try {
-                fromServer = new Socket(address, port);
-                BufferedReader in  = new BufferedReader(new InputStreamReader(fromServer.getInputStream()));
-                PrintWriter out = new PrintWriter(fromServer.getOutputStream(),true);
-                BufferedReader inu = new BufferedReader(new InputStreamReader(System.in));
-
-                String fuser,fserver;
-
-                while ((fuser = inu.readLine())!=null) {
-                    out.println(fuser);
-                    fserver = in.readLine();
-                    System.out.println(fserver);
-                    if (fuser.equalsIgnoreCase("close")) break;
-                    if (fuser.equalsIgnoreCase("exit")) break;
+        try {
+            while(true) {
+                out.println("test");
+                String str = in.readLine();
+                if (str != null) {
+                    System.out.println("from server:" + str);
                 }
-                out.close();
-                in.close();
-                inu.close();
-                fromServer.close();
 
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+
         }
-
+        catch (IOException e) {
+            System.err.println("IO Exception");
+        }
+        finally {
+            try {
+                socket.close();
+            }
+            catch (IOException e) {
+                System.err.println("Socket not closed");
+            }
+            threadcount--;
+        }
     }
 
 
-
-    public static void main(String[] args) {
-
-        Client client = new Client("localhost",4444);
-
-        client.start();
-
-
-
-    }
 
 }
