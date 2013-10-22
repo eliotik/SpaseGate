@@ -2,39 +2,48 @@ package com.game.server;
 
 
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Server extends Thread {
     private Socket socket;
-    private BufferedReader in;
-    private PrintWriter out;
+    private ObjectInputStream in;
+    private InputStream inputStream;
+    private OutputStream outputStream;
+    private ObjectOutputStream out;
 
     public Server(Socket s) throws IOException {
         socket = s;
-        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+        outputStream = socket.getOutputStream();
+        out = new ObjectOutputStream(outputStream);
+        inputStream = socket.getInputStream();
+        in =  new ObjectInputStream(inputStream);
+
         start();
     }
 
     public void run() {
+
         try {
+            while (true) {
+                ArrayList arrayList = new ArrayList();
+                arrayList.add("Test from server");
 
-            String str = in.readLine();
-            System.out.println("from client: " + str);
-            if (str.equals("test")) {
-                out.println("Test word");
-            }
-            else {
-                out.println("some other word");
-            }
+                out.writeObject(arrayList);
+                out.flush();
 
+                if (inputStream.available() > 0) {
+                    System.out.println(in.readObject());
+                }
+
+            }
 
         }
         catch (IOException e) {
             System.err.println("IO Exception");
-        }
-        finally {
+        } catch (ClassNotFoundException e) {
+            System.err.println("ClassNotFoundException");
+        } finally {
             try {
                 socket.close();
             }
@@ -43,4 +52,15 @@ public class Server extends Thread {
             }
         }
     }
+
+//    public ArrayList getData() {
+//        ArrayList data = new ArrayList();
+//        data.add(somedata);
+//        data.add(somedata2);
+//        return data;
+//    }
+
+//    public void setData(String somedata, String somedata2) {
+//
+//    }
 }
