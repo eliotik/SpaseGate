@@ -13,8 +13,7 @@ public class MultiServer {
     public static void main(String[] args) throws IOException {
         ServerSocket s = new ServerSocket(PORT);
         System.out.println("Server Started");
-        CustomLog customLog = new CustomLog("server");
-        customLog.Log("server started");
+        CustomLog.Log("server", "server started");
         try {
             while (true) {
                 Socket socket = s.accept();

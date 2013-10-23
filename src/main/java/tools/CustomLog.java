@@ -8,23 +8,17 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 public class CustomLog {
-    private Logger logger;
-    private FileHandler fh;
-    private File file;
-    private String filename;
 
-    public CustomLog(String name) {
-        logger = Logger.getLogger(name);
-        filename = name;
-    }
-
-    public void Log (String message) {
+    public static void Log (String filename, String message) {
         try {
-            file = new File("target/" + filename + ".log");
+            Logger logger = Logger.getLogger(filename);
+
+            File file = new File("target/" + filename + ".log");
             if (!file.exists()) {
+                System.out.println("exist");
                 file.createNewFile();
             }
-            fh = new FileHandler("target/" + filename + ".log");
+            FileHandler fh = new FileHandler("target/" + filename + ".log", true);
 
             logger.addHandler(fh);
             SimpleFormatter formatter = new SimpleFormatter();
