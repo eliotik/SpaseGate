@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class Client extends Thread {
@@ -14,12 +15,16 @@ public class Client extends Thread {
     private InputStream inputStream;
     private OutputStream outputStream;
     private ObjectOutputStream out;
-    private static int counter = 0;
-    private int id = counter++;
+
+    private Random rn = new Random();
+    private int testNum;
 
 
     public Client(InetAddress addr) {
-        System.out.println("Making client " + id);
+
+        testNum = rn.nextInt();
+
+        System.out.println("Making client " + testNum);
         try {
             socket = new Socket(addr, MultiServer.PORT);
         }
@@ -54,9 +59,10 @@ public class Client extends Thread {
                     System.out.println(arrayList1.toString());
                 }
 
+
                 ArrayList arrayList = new ArrayList();
-                arrayList.add("test");
-                arrayList.add("test2");
+//                arrayList.add("test from client_ " + testNum);
+//                arrayList.add("test2 from client_" + testNum);
 
                 out.writeObject(arrayList);
                 out.flush();
